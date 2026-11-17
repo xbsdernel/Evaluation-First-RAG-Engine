@@ -1,0 +1,1 @@
+{"run_id":"run-000-dummy-scaffold","config_hash":"152a9a5b4751704a","timestamp":"2026-11-17T21:13:03.941475+00:00","git_commit":"eb0fa60","parameters":{"stage":"S1-scaffold","seed":42},"metrics":{"accuracy":1.0},"artifacts":{},"notes":"Initial dummy scaffold run"}

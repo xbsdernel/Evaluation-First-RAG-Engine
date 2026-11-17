@@ -28,7 +28,6 @@ coverage.xml
 .ruff_cache/
 
 # DVC (added in ISS-002)
-/data/
 .dvc/tmp/
 .dvc/cache/
 
