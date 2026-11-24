@@ -19,7 +19,6 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-
 # ---------------------------------------------------------------------------
 # Shared helpers
 # ---------------------------------------------------------------------------
@@ -54,7 +53,7 @@ class Doc(BaseModel):
     metadata: dict[str, str] = Field(default_factory=dict, description="Arbitrary document-level metadata.")
 
     @model_validator(mode="after")
-    def _char_end_matches_content(self) -> "Doc":
+    def _char_end_matches_content(self) -> Doc:
         if self.char_end != len(self.content):
             raise ValueError(
                 f"char_end ({self.char_end}) must equal len(content) ({len(self.content)})"
@@ -62,7 +61,7 @@ class Doc(BaseModel):
         return self
 
     @classmethod
-    def build(cls, source_path: str, content: str, metadata: dict[str, str] | None = None) -> "Doc":
+    def build(cls, source_path: str, content: str, metadata: dict[str, str] | None = None) -> Doc:
         """Factory that derives ``doc_id`` and ``char_end`` automatically."""
         doc_id = _stable_hash({"path": source_path, "content": content})
         return cls(
@@ -94,7 +93,7 @@ class Span(BaseModel):
     text: str = Field(..., description="The span text (doc.content[char_start:char_end]).")
 
     @model_validator(mode="after")
-    def _start_before_end(self) -> "Span":
+    def _start_before_end(self) -> Span:
         if self.char_start >= self.char_end:
             raise ValueError(
                 f"char_start ({self.char_start}) must be < char_end ({self.char_end})"
@@ -102,7 +101,7 @@ class Span(BaseModel):
         return self
 
     @classmethod
-    def from_doc(cls, doc: Doc, char_start: int, char_end: int) -> "Span":
+    def from_doc(cls, doc: Doc, char_start: int, char_end: int) -> Span:
         """Factory that extracts and validates the text slice from a Doc."""
         text = doc.content[char_start:char_end]
         if not text:
@@ -133,7 +132,7 @@ class Chunk(BaseModel):
     metadata: dict[str, str] = Field(default_factory=dict, description="Optional chunk-level metadata.")
 
     @model_validator(mode="after")
-    def _start_before_end(self) -> "Chunk":
+    def _start_before_end(self) -> Chunk:
         if self.char_start >= self.char_end:
             raise ValueError(
                 f"char_start ({self.char_start}) must be < char_end ({self.char_end})"
@@ -148,7 +147,7 @@ class Chunk(BaseModel):
         char_end: int,
         variant: str,
         metadata: dict[str, str] | None = None,
-    ) -> "Chunk":
+    ) -> Chunk:
         """Factory that derives ``chunk_id`` and ``text`` from the parent Doc."""
         chunk_id = _stable_hash(
             {"doc_id": doc.doc_id, "start": char_start, "end": char_end, "variant": variant}

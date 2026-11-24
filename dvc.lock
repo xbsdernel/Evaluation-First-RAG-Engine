@@ -1,0 +1,10 @@
+schema: '2.0'
+stages:
+  snapshot:
+    cmd: python -m rag_engine.cli evaluate
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: b96dbbddf083977ee2bacd13545579ae.dir
+      size: 36
+      nfiles: 1

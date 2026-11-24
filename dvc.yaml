@@ -1,0 +1,5 @@
+stages:
+  snapshot:
+    cmd: python -m rag_engine.cli evaluate
+    deps:
+      - data/raw
